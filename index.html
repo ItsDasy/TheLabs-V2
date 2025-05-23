@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TheLabs - Trading Journal</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+        }
+
+        .container {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 40px;
+            width: 100%;
+            max-width: 400px;
+            box-shadow: 0 25px 45px rgba(0, 0, 0, 0.3);
+            animation: fadeIn 0.8s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .logo {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .logo h1 {
+            font-size: 2.5rem;
+            font-weight: 300;
+            color: #FFD700;
+            letter-spacing: 2px;
+            margin-bottom: 10px;
+        }
+
+        .welcome-text {
+            text-align: center;
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 1rem;
+            margin-bottom: 30px;
+            font-weight: 300;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        .input-field {
+            width: 100%;
+            padding: 15px 20px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            color: white;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        .input-field:focus {
+            outline: none;
+            border-color: #FFD700;
+            background: rgba(255, 255, 255, 0.08);
+            box-shadow: 0 0 20px rgba(255, 215, 0, 0.2);
+        }
+
+        .input-field::placeholder {
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
+            border: none;
+            border-radius: 12px;
+            color: #000;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-bottom: 15px;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(255, 215, 0, 0.3);
+        }
+
+        .submit-btn:active {
+            transform: translateY(0);
+        }
+
+        .forgot-btn {
+            width: 100%;
+            padding: 12px;
+            background: transparent;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 12px;
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .forgot-btn:hover {
+            border-color: rgba(255, 255, 255, 0.4);
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .error-message {
+            background: rgba(255, 0, 0, 0.1);
+            border: 1px solid rgba(255, 0, 0, 0.3);
+            color: #ff6b6b;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            text-align: center;
+            font-size: 0.9rem;
+            display: none;
+        }
+
+        /* Popup Styles */
+        .popup-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(5px);
+            z-index: 1000;
+            animation: fadeIn 0.3s ease-out;
+        }
+
+        .popup {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 15px;
+            padding: 30px;
+            text-align: center;
+            max-width: 350px;
+            width: 90%;
+        }
+
+        .popup h3 {
+            color: #FFD700;
+            margin-bottom: 15px;
+            font-size: 1.3rem;
+        }
+
+        .popup p {
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 20px;
+            line-height: 1.5;
+        }
+
+        .popup-close {
+            background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
+            border: none;
+            border-radius: 8px;
+            color: #000;
+            padding: 10px 20px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                margin: 20px;
+                padding: 30px 25px;
+            }
+            
+            .logo h1 {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="logo">
+            <h1>TheLabs</h1>
+        </div>
+        
+        <div class="welcome-text">
+            Welcome back to your trading journal
+        </div>
+
+        <div class="error-message" id="errorMessage"></div>
+
+        <form id="loginForm">
+            <div class="form-group">
+                <label for="username">Account</label>
+                <input type="text" id="username" class="input-field" placeholder="Enter your username" required>
+            </div>
+
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" class="input-field" placeholder="Enter your password" required>
+            </div>
+
+            <button type="submit" class="submit-btn">Sign In</button>
+        </form>
+
+        <button type="button" class="forgot-btn" id="forgotBtn">Forgot Access?</button>
+    </div>
+
+    <!-- Popup for Forgot Access -->
+    <div class="popup-overlay" id="popupOverlay">
+        <div class="popup">
+            <h3>Access Recovery</h3>
+            <p>Please contact your administrator to recover your account access. This is a private trading journal system.</p>
+            <button class="popup-close" id="popupClose">Got it</button>
+        </div>
+    </div>
+
+    <script>
+        // APP_CREDENTIALS - Add your accounts here
+        const APP_CREDENTIALS = {
+            "Dasy": "The1%People",
+            "trader1": "password123",
+            "john": "johnpass",
+            // Add more accounts as needed
+            // "username": "password"
+        };
+
+        // DOM Elements
+        const loginForm = document.getElementById('loginForm');
+        const usernameInput = document.getElementById('username');
+        const passwordInput = document.getElementById('password');
+        const errorMessage = document.getElementById('errorMessage');
+        const forgotBtn = document.getElementById('forgotBtn');
+        const popupOverlay = document.getElementById('popupOverlay');
+        const popupClose = document.getElementById('popupClose');
+
+        // Login Form Handler
+        loginForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const username = usernameInput.value.trim();
+            const password = passwordInput.value;
+
+            // Validate credentials
+            if (APP_CREDENTIALS[username] && APP_CREDENTIALS[username] === password) {
+                // Store login info in localStorage
+                localStorage.setItem('thelabs_user', username);
+                localStorage.setItem('thelabs_login_time', new Date().getTime());
+                
+                // Success animation
+                document.querySelector('.submit-btn').style.background = '#4CAF50';
+                document.querySelector('.submit-btn').textContent = 'Success!';
+                
+                // Redirect to dashboard after short delay
+                setTimeout(() => {
+                    window.location.href = 'dashboard.html';
+                }, 1000);
+            } else {
+                // Show error message
+                showError('Invalid username or password. Please try again.');
+            }
+        });
+
+        // Forgot Access Button Handler
+        forgotBtn.addEventListener('click', function() {
+            popupOverlay.style.display = 'block';
+        });
+
+        // Close Popup Handler
+        popupClose.addEventListener('click', function() {
+            popupOverlay.style.display = 'none';
+        });
+
+        // Close popup when clicking outside
+        popupOverlay.addEventListener('click', function(e) {
+            if (e.target === popupOverlay) {
+                popupOverlay.style.display = 'none';
+            }
+        });
+
+        // Show Error Message Function
+        function showError(message) {
+            errorMessage.textContent = message;
+            errorMessage.style.display = 'block';
+            
+            // Shake animation for form
+            document.querySelector('.container').style.animation = 'shake 0.5s ease-in-out';
+            
+            setTimeout(() => {
+                errorMessage.style.display = 'none';
+                document.querySelector('.container').style.animation = 'fadeIn 0.8s ease-out';
+            }, 3000);
+        }
+
+        // Shake animation CSS
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes shake {
+                0%, 100% { transform: translateX(0); }
+                25% { transform: translateX(-5px); }
+                75% { transform: translateX(5px); }
+            }
+        `;
+        document.head.appendChild(style);
+
+        // Check if user is already logged in
+        window.addEventListener('load', function() {
+            const loggedUser = localStorage.getItem('thelabs_user');
+            const loginTime = localStorage.getItem('thelabs_login_time');
+            
+            // Check if login is still valid (optional: you can set expiration)
+            if (loggedUser && loginTime) {
+                const currentTime = new Date().getTime();
+                const timeDiff = currentTime - parseInt(loginTime);
+                
+                // Auto redirect if logged in within last 24 hours
+                if (timeDiff < 24 * 60 * 60 * 1000) {
+                    window.location.href = 'dashboard.html';
+                }
+            }
+        });
+
+        // Enter key support
+        document.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter' && !popupOverlay.style.display) {
+                loginForm.dispatchEvent(new Event('submit'));
+            }
+        });
+    </script>
+</body>
+</html>
